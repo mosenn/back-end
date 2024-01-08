@@ -1,0 +1,228 @@
+
+یک ساعت اول ویدو  کار های زیر انجام شد و به درستی کار می کنه  
+
+create api for register => done
+get response from clinet in api folder => done
+add jwt for create user at server  => is done 32:21 video time
+set cookie in server and then check network tab clinet (see video) => is done 43:07 video time
+add context for get response at coocike for front end (see video at time 44:08) => done
+add Route Component for Login and Register If user register show loggin > is done video time 52:19
+create profile route at server (video time 53) => done
+
+// solution proplem-1
+//--- 1
+زمانی که میایم می خوایم کوکی رو در سمت فرانت بگیریم 
+به ما ارور 401 که خودمون ست کردیم میده و کوکی رو نمیشناسه
+اما سمت سرور و داخل پست من اوکی هست و مشکلی نداره 
+برای این موضوع باید یک راه حلی پیدا کنم .
+دقیقه ویدو 50 به بعد . => درست شد
+رو نیاز بود تنظیم شه که ادرس براش ست شه و از  cors اول
+app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }));
+ بیایم  axios سمت فرانت هم نیاز هست که برای 
+ اپشن تعریف کنیم 
+ axios.defaults.withCredentials = true; 
+
+سمت سرور یا همون بک هم نیاز هست که اول چک کنیم ببینم توکن هست یا نه 
+ که اشتباه بود صورت درست اش مثل کد زیر هست که امید چک کردیم ببینم {token} اینجوری بار اول تعریف کرده بودیم
+ توکن هست یا نیست اگر بود بیاد یه سری کارا انجام شه 
+  try {
+    const token = req.cookies?.token;
+    console.log("token", token);
+    if (token) {
+      const decode = jwt.verify(token, "secret");
+      return res.status(200).json(decode);
+    } else {
+      return res.status(404).json("token is not found");
+    }
+  }
+// solution proplem-1
+//--- 1
+
+ یک ساعت بعدی ویدو شروع از 1:05:10 
+
+set state  userId & setUser they take data , from response profile 
+data.name and  data.userId in RegisterUser.js file (video time :1:06:53) => done
+
+ کوکی رو که ست می کنیم درون سرور
+اگر به لوکال هاستش بریم می تونیم
+  در بخش اپلیکشن قسمت کوکی می تونیم ببینم کوکی 
+که ست کردیم رو
+
+if remove token from the http://localhost:4010/ 
+then back to clinet (front-end : http://127.0.0.1:5173/)
+then refresh page front-end , can see back to register page 
+and we dont see login > (video time 1:07:51 ) > done 
+
+create login route > (video time start at  1:14:04 finish at ) => done
+
+i DO :create tools folder in directory(jwt,bycrypt)
+
+hash passowrd> (video time start at  1:14:04 finish at 1:18:39 ) => done
+
+set state For text button , if register show register txt 
+if login show login , then add text for 
+if register show down text > you have account click? 
+if login show down text > if you need account click (video time start at :1:07:52 finish at 1:11:58) => done
+inlogin route check passowd(compare) hash > (video time start at  1:19:00 finish at 1:23:01 ) => done
+
+ --------- i  was see video at in time 1:22:50 => everything is okay , server & clinet is worked perfect.
+
+if user login show chat start video time 1:23:07 
+1 - change Route componet render chat Componet if user login 
+and rename Register to RegisterAndLogin => done
+2- create chat componet  at video time 1:26:08 finish desgin message 1:31:11 =>done
+desgin chat componet . video time  1:26:09 => done
+3- add web socket to server start video at 1:31:11 => done
+install ws > websocket packages => require('ws')
+ 4- create state and eventlistener for socket frontend in chat componet in the useeffect() => done have hellow message
+
+
+video time => 1:37:37
+start for talk about clinet peroperty websocket at server 
+  console.log("req header from socket.one:", req.headers); => have infomation from req.headers cookie have token => done
+  need decode token from req.header for get user video time => 1:43:43 => done
+  get user they login check with two diffrent web browser (chrome and microstedge) video time 1:47:06 => done
+  maping  socket.clinet for show users is connecting Note : most be use two diffrent web broweser => done , 
+
+  foreach clinet then maping and send JSON STRINGFY to clinet start video time 1:48:11 finish at 1:49:49=> is done 
+
+  parse data socket at clinet and log them with loop 
+  loop for spefic show user online video time at 1:56:12 => done
+
+
+  --////////////////////////////////
+
+  display data parse in get socket at left side video time at 1:56:16
+(this video show users with map in object key) 
+ i do  with map with array and contorl dublicate object with filter array mehotd  => is done 
+
+ set user avatar video time 2:01:13 => finish at 2:06:00 => done
+ generate avatar bg-color with userId start video time : 2:06:09 finish at 2:11:51 => is done
+
+  click user online show background style for click  function start video time at  2:12:56 finish at 2:15:23 => is done
+
+  create function logo start video time at 2:16:54 finish at : 2:17:05 
+
+  create onlinePepoleExclour User finish at 2:21:42 , 
+  for show just user online , 
+  but i dont need this in my code . my code fixed this . 
+
+  add line style for selected , start at : 2:22:28 finish at 2:24:13 => done
+
+  show who is selected in message start at 2:24:24 finish at 2:27:19;
+
+  start send mesage at 2:27:46 - get buffer result at server 2:35:1 -  finish at : 2:43:57 => done have message
+
+  display message to ui   start 2:44:37 - 2:50:19 set who is sender and fixed 
+  dublicate message add conncetion.id in sv then pass to clinet finsh at 3:01:51 but my code is work , i dont use this code but my code its okey => done
+
+=> need set this , watch video at 2:53:04 create modal message=> is odne
+  set message to database start 2:53:04 -   create message chat model at sv start at 2:55:18 => is odne
+  sender:objecId & recipeint:objecId , tex:String timestamps:true types is mongoose.Schema.Types.ObjectId ,ref to model User . 
+وقتی که می خوایم بین دوتا داکیومنت درون مونکو ارتباط برقرار کنیم 
+میایم از رف استفاده می کنم  و تایپ رو می زاریم روی 
+schema.Types.ObjectId
+
+زده میشه به یک دیتابیس  ref زمانی که درون یک مدل
+مشخصات اون دیتابیس یا همون داکیومنت میاد درون دایکومنتی که بهش رف زده 
+
+از درون یوسر گفتیم ایدی یوسر هارو User زدیم به   ref  امدیم  Message Model مثلا الان درون 
+message model به ما بده و ذخیره کنه درون 
+
+نکته :
+sender => کسی که مسیج بهش ارسال شده 
+recipeint => کسی که مسیج رو فرستاده
+
+بعد از فرستادن پیام درون دیتا بیس این دوتا ایدی رو داریم 
+که در واقع از مدل یوسر دارن گرفته میشن .
+
+
+contorl dublicate message start at 2:59:46 finish at 3:01:39 => done
+برای اینکه مسیج تکراری داخل صحفه چاپ نشه در واقع تکرار نشه چند بار
+روش که داخل ویدو بود با لودش کار نکرد
+روش خودم رو استفاده کردم .
+  //*controll dublicate show message on screen
+  const [latesMessage, setLatesMessage] = useState(null);
+
+  const handleMessage = (e) => {
+    // console.log("socket message : ", e.data);
+    const data = JSON.parse(e.data);
+    // console.log(data, e, "this e and data in handleMessage");
+    if ("userInfo" in data) {
+      showOnlineUser(data.userInfo);
+    } else if ("text" in data) {
+      //*my way
+      setLatesMessage({ isOur: false, text: data.text });
+      // console.log({ data }, "data in handelmesage");
+      //*video way
+      // setUiMessage((prev) => [...prev, { isOur: false, text: data.text }]);
+    }
+  };
+
+  useEffect(() => {
+    //*controll dublicate show message on screen
+    if (latesMessage) {
+      setUiMessage((prev) => [...prev, latesMessage]);
+    }
+  }, [latesMessage]);
+
+
+  add who is sender at 3:02:04 finish at : 3:19:06
+
+  start fixed if send message automatic scroll for see message  start at 3:19:21 finish at 3:29::15 - this in video is not work is fixed this with react-scroll-bottom package in npmjs => is done
+
+
+//Todo 
+
+
+
+start video at this time
+  if resresh chat remove wanna be fix this start at create route in server for chat message 3:29:28 finish at : 
+  video time at 3:32:02 set routes on server and pas req.params to clinet get user id 
+watch video at this time
+  start at 3:32:02
+ automatic websocket re connect this set at clinet 3:44:26 finish at 3:46:55
+ //code 
+   const connectToWebSocket = () => {
+    const socket = new WebSocket("ws://localhost:4010");
+    setWs(socket);
+    socket.addEventListener("message", handleMessage);
+    socket.addEventListener("close", () => console.log("close"));
+    socket.addEventListener("close", () => connectToWebSocket());
+  };
+
+
+  create timeout for chat 3:47:47 finish at 3:49:04 => done
+  get message with method finde and sort , i use limit for 20 message video time 3:51:46 => done
+  diplay message , set state Uimessage coming data from server and now have diplay message in display 
+  3:52:18 => done
+
+  اقا داخل همون استیت که داشتیم مسیج هارو مپ می کردیم به اسم 
+  uiMessage
+  الان امدیم مسیج های که درون دیتابیس هست رو گت کردیم
+  بعد ست کردیم داخل همین استیت 
+  uiMessage 
+
+  حالا دیگه مسیج ها از سمت دیتا بیس میان رفرش هم شه دیگه پیام ها هست 
+  ولی لیمیت گذاشتم براشون تا 20 نشون میده هیمنطور سورت هم شده که ا اخرین مسیج به اولی هست
+
+fixed send long message like lorem at 3:58:09 about uniq id 
+
+add online circel for user online at 3:59:40 finish at 4:01:0 
+
+
+start watch video at this time :
+start show offline user at 4:04:11 finisth at 4:35:54 => done but with my way not video
+
+create logout btn at clinete and define route start at 4:35:57 finish at 4:40:34 => done
+show user information about online and show username at btn logout at 4:41:01 finish at 4:44:21
+
+send fine button at 4:50:41
+create function 4:54:03 finish at 5:21:36 
+
+END
+//proplembs : 
+
+
+
+

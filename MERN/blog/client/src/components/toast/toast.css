@@ -1,0 +1,32 @@
+.showToast {
+    position: fixed;
+    top: 0px;
+    animation: show-toast 0.4s ease forwards alternate;
+    animation-fill-mode: both;
+    animation-direction: alternate;
+}
+@keyframes show-toast {
+    from {
+        transform: translateY(-120px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(54px);
+        opacity: 1;
+    }
+}
+
+.loadingLineBottom  {
+    animation:loading-LineBottom ease-in 3s forwards
+
+}
+@keyframes loading-LineBottom {
+
+    from {
+        width: 0;
+    }
+    to {
+    width: 100%;
+    }
+    
+}

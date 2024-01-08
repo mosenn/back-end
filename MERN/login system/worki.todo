@@ -1,0 +1,135 @@
+create mvc for server => done
+create login with data base => done
+hash password in server => done
+compare password => done
+validation for login in server => done
+show error message in clinet => done
+after register navigate to profile and show information user register => done 
+
+(can if user register show login first if user login then naviagte
+ to profile set this after login is done)
+
+work on login user and show error message => done
+if user is login agin naviagte to profile  => done
+
+create schema for user add picture in register => done
+handel pic in clinet users can add picture for profile => done
+show pic in profile page  => done
+
+add select form in clinet , set 4 image for profile image => done i handle with radio input
+
+add google recaptcha for login db . => done
+
+add login linkedin = first take user clinet_id and secret 
+then difine ridirect url , most be decalre in react AccessLinkedin Like github . 
+
+then take code in the params url . => done
+then define post method for take token , => done
+pass code in params to post api accesstoken => proply most be define in the server =>done ., 
+then this api back response  token => done
+back to react AccessToken Componet useEffect() and conditon for if token and userdata 
+saved to local userDAta , then navigate to profile . => done 
+
+setLoading for Linkedin login before go to profile 
+set message for back to login if user dont be have token loading . 
+serach for how can get email or image linkedin user profile and show to website . 
+
+//* 
+1 - create api function 
+2 - pass token to api function 
+3 - pass response api function to controller function for route res.send response to clinet
+4 - define route for controller function 
+5 - take data in clinet with route 
+//*
+
+//* found solotion 
+: note : all api linkedin for sigin not login all user can just one time to sigin with linkedin
+1 - create model for take token 
+2 - import model in api file 
+3 - call model.create in getTokenAccessUserDataLinkedin or getCodeAccessLinkedin
+4 - take token from mongodb in controller in the userDataLinkedin function 
+5 - pass token to  function getTokenAccessUserDataLinkedin for get user data 
+
+//* 
+
+deploy : => done
+check mongodb connection data base in index.js 
+with process env . if error remove env check with out env. 
+
+if deploy sucess , go for add routes or other files
+
+
+//*linkedin => done
+clinet > api > linkedin.js > add server address this route server/accessTokenLinkedin?code
+
+client > src > componnet > login.jsx => add redirect address (client/accessLinkedin) //https://loginsystemtest.vercel.app/accessGithub
+server  > api > linkedinAccessToken > add redirect address (client/accessLinkedin) //https://loginsystemtest.vercel.app/accessGithub
+
+//*github => done
+clinet > api > github.js > add server route for take code   server/AccessTokenGithub 
+
+//*recaptcha google =>done
+clinet > api > rechpcha google add server address main 
+localhost:3000/recapcha
+newaddress/recapcha
+
+deploy clinet and server in vercel =>done
+
+send link to other for test . => its okey => done
+
+//* strategi login 
+
+first u have get token linkedin , 
+then have user data , save token , save user data like email or name
+now have btn login with linkedin in clinet 
+click on , login linkedin popup have input . take email or name 
+check in data base collection linkedinuser if email or name same , 
+then take token in database as same name or email input filed 
+pass token to api for get userdata agin , if everything is okey save to localstorge userdata and redirect to profile componet . 
+
+
+for get userdata linkedin with token in data base: 
+pass token to 3 function : 
+
+server > api > getTokenAccessUserDataLinkedin
+2 times use function this function getTokenAccessUserDataLinkedin
+1 itme server > controller > in this function userDataLinkedin > pass token to this function getTokenAccessUserDataLinkedin
+set cors origin address client after deploy
+
+create online document . 
+post in linkedin . 
+
+//*
+server rdy for local . 
+now most back to clinet , get data from sigin linkedin api 
+if have data exist redirect to userProfile , and show infomation user 
+then create login part likedin for clinet haved api for login . 
+
+then finish they parts  , back server to online address api and redirect url 
+then check login first then register . 
+
+if every thing work login and sigin with linkedin is finish !
+
+
+//*
+برای اینکه توکن جدید بگیریم برای ثبت نام با لینکدین
+باید بریم به قسمت 
+develpoer linkedin > doc and tools > oauth token tools 
+میایم یک توکن ایجاد می کنیم  oauth token tools داخل 
+حالا هم می تونیم از این توکن برای 
+خودمون استفاده کنیم  api 
+و مشخصات خودمون رو میده درون ریسپانس
+
+
+
+//* حل کردن مشکل دوبار ذخیره شدن در دیتا بیس لینکدین
+دلیل اینکه دیتای ثبت نام با لینکدین دوبار داخل دیتا بیس ذخیره میشه 
+اینه که دو تا فانکشن داره به 
+درخواست می زنه یکی درون فولدر   api 
+یک بار هم همون فانکشن درون  api
+این مشکل تا اونجا که تا الان متوجه شدم برای فرانت هست  accesstoken.jsx 
+چون با هر در خواستی که زده میشه  از سمت فرانت 
+سرور کدها رو اجرا می کنه در نتیجه دیتا درون دیتابیس ذخیره میشه 
+حالا داخل فرانت دو بار داره فانکشنی که مسئول صدا زدن ای پی ای  لینکدین هست اجرا میشه
+
+//* این مشکل از سرور بود که دوبار فانکشن مربوط به ای پی ای صدا زده می شد که رفع شد

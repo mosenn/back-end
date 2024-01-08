@@ -1,0 +1,7 @@
+.showToolTip {
+    border:1px solid red;
+}
+
+.hideToolTip { 
+    border:3px solid black;
+}

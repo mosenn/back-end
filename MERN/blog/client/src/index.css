@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+a  {
+  color:rgb(114, 114, 230);
+ cursor: pointer;
+}
+a:hover{
+    color:rgb(121, 121, 167);
+}
+

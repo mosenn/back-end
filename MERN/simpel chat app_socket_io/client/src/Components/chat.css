@@ -1,0 +1,66 @@
+.test {
+  display: flex;
+  flex-direction: column;
+}
+.test > textarea {
+  border: none;
+  outline: none;
+  resize: none;
+
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 2px;
+  caret-color: rgb(65, 131, 74);
+  padding: 15px;
+  font-size: 1rem;
+}
+.test > textarea::placeholder {
+  font-size: 1rem;
+}
+
+.test > button {
+  border: 1px solid rgb(214, 214, 214);
+  outline: none;
+  transition: 0.5s;
+  border-radius: 2px;
+  margin-top: 5 px;
+}
+.test > button:hover {
+  background-color: rgb(160, 204, 160);
+}
+.userMessage {
+  border: 1px solid rgb(214, 214, 214);
+  width: 250px;
+  padding: 10px;
+  color: whitesmoke;
+  border-radius: 2px;
+  text-align: left;
+}
+.infoChat > p {
+  display: flex;
+  font-weight: bold;
+  align-items: flex-start;
+}
+.infoChat > p > span {
+  display: inline-block;
+  margin-left: 5px;
+  font-weight: normal;
+}
+.other {
+  text-align: right;
+  background-color: rgb(100, 100, 179);
+  width: fit-content;
+}
+.you {
+  text-align: left;
+  background-color: rgb(70, 198, 139);
+  width: fit-content;
+  color: gray;
+}
+
+.body-chat {
+  width: 250px;
+  height: 250px;
+  /* overflow-y: scroll;
+  top: 50px;
+  right: 20px; */
+}
