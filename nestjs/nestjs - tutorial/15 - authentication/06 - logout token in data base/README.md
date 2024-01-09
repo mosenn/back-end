@@ -160,7 +160,7 @@ npx prisma generate
 
 درون auth.controller یک متد داریم به اسم logout که می تونه از نوع post یا get باشه 
 
-```
+```javascript
   // * need guard for know that who is user  logout
   @UseGuards(JwtAuthGuard)
   //* logout - logout can be Post method and Get method
