@@ -205,3 +205,25 @@ npx prisma generate
 
 **نکته: و زمانی که logout می کنیم کاربر دیگه نمی تونه به profile 
 دسترسی داشته باشه و مشخصات خودشو ببینه چون logout هست**
+
+# summary
+
+در این بخش یک token اضافه کردیم درون data base برای اینکه بتونیم کاربر رو logout کنیم . 
+
+اول درون prisma.schema یک فیلد جدید به اسم token برای هر کاربر مشخص کردیم 
+
+درون auth.controller امدیم token که موقع login ساخته میشه رو ارسال کردیم به یک متد به اسم updateToken . 
+
+متد updateToken درون auth.service اتفاق می افته وظیفه اش قرار دادن token برای کاربری که در حال حاضر login کرده . 
+
+در ادامه یک متد دیگه داریم به اسم validateUserByToken که چک می کنه ایا کاربر و token وجود دارند یا نه . 
+
+این متد id رو از jwt-startegy میگیره در قسمت validate متد validateUserByToken صدا زده شده . 
+
+در نهایت متد logout رو داریم در auth.controller که removeToken رو اجرا می کنه که removeToken در auth.service قرار داره . 
+
+وظیفه removeToken در واقع update کردن token هست و مقدار token هر کاربر رو null می کنه . 
+
+# END 
+
+`پایان بخش logout به وسیله token که در دیتابیس ذخیره میشه`
