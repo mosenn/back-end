@@ -40,7 +40,7 @@ export class UserController {
     return this.userService.user(id);
   }
 
-  //   for update use @Requset body  req.body because now role is update , role is not be update with @Body()
+  //* for update use @Requset body  req.body because now role is update , role is not be update with @Body()
   @Put('update/:id')
   update(@Param('id') id: string, @Request() req) {
     return this.userService.update(req.body, id);

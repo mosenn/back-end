@@ -40,6 +40,8 @@ export class AuthController {
       token: token,
     };
   }
+
+  
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   async userProfile(@Request() req) {
