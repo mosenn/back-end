@@ -1,73 +1,74 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# upload file 
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+در این بخش می خوایم در مورد اپلود کردن file در nestjs صحبت کنیم . 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+مثل : عکس , pdf و ..
 
-## Description
+## init new nestjs
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+یک nestjs جدید ایجاد می کنیم که صرفا فایل ها و فولدر های اولیه رو داشته باشیم . 
 
-```bash
-$ npm install
+
+```
+new nestjs upload 
 ```
 
-## Running the app
 
-```bash
-# development
-$ npm run start
+## multer 
 
-# watch mode
-$ npm run start:dev
+در واقع multer یک package هست که می تونیم به وسیله این package فایل ها رو اپلود کنیم . 
 
-# production mode
-$ npm run start:prod
+از multer درون expressjs استفاده میشه و درون nestjs هم می تونیم ازش استفاده کنیم . 
+
+برای اپلود فایل در سمت فرانت نیاز هست from که در خواست رو می فرسته نیاز هست فرمتش multipart/form-data باشه 
+
+درون postman هم اگر بخوایم فایلی رو ارسال کنیم نیاز هست در قسمت `body` بیام بگیم که from-data هست . 
+
+
+![image](https://github.com/mosenn/back-end/assets/91747908/5644bb3a-28eb-43ac-8bab-7eb0e469c10a)
+
+
+توضیحات خوده داکیومنت nestjs در لینک زیر هست که اپلود فایل رو به وسیله multer توضیح میده : 
+
+```
+https://docs.nestjs.com/techniques/file-upload#array-of-files
 ```
 
-## Test
+در واقغ multer میاد file مد نظر ما رو parse می کنه و می تونیم ازش استفاده کنیم . 
 
-```bash
-# unit tests
-$ npm run test
+از اونجای که خوده nestjs داره از expressjs استفاده می کنه می تونیم از multer هم استفاده کنیم . 
 
-# e2e tests
-$ npm run test:e2e
+## send file with postman 
 
-# test coverage
-$ npm run test:cov
+همنطور که اشاره کردیم برای ارسال فایل در postman میایم form-data رو از بخش body انتخاب می کنیم 
+
+
+![image](https://github.com/mosenn/back-end/assets/91747908/5644bb3a-28eb-43ac-8bab-7eb0e469c10a)
+
+
+در ادامه می تونیم که بگیم چه نوع دیتای رو می خوایم بفرستیم یک file یا یک text : 
+
+
+![image](https://github.com/mosenn/back-end/assets/91747908/fa13a185-cede-4441-8e9f-3742cf0c96e1)
+
+
+همونطور که می بینیم یک image تعریف کردیم که در واقع یک file عکس هست در ادامه یک text به اسم name تعریف کردیم که هر دو رو داشته باشیم . 
+
+
+با دستور زیر که درون داکیومنت خوده nestjs هست میام multer رو نصب می کنیم 
+
+```
+$ npm i -D @types/multer
 ```
 
-## Support
+## create route for upload
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+یک route ایجاد می کنیم از نوع Post@ که قرار برای ما کار اپلود کردن رو انجام بده . 
 
-## Stay in touch
+درون app.controller.ts میایم یک route از نوع Post ایجاد می کنیم . 
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+![image](https://github.com/mosenn/back-end/assets/91747908/e54cab1a-9222-42fe-a17c-dc9b9b34c7f4)
 
-## License
 
-Nest is [MIT licensed](LICENSE).
+
