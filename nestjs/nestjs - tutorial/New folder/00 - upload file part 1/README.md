@@ -71,4 +71,78 @@ $ npm i -D @types/multer
 ![image](https://github.com/mosenn/back-end/assets/91747908/e54cab1a-9222-42fe-a17c-dc9b9b34c7f4)
 
 
+کدی که تعریف می کنیم به صورت زیر هست :
+
+```javascript
+  @Post('/upload')
+  uploadFile(@Body() body: any) {
+    console.log(body);
+    return body;
+  }
+```
+
+خب اگر وارد postman شیم و یک form-data ارسال کنیم می بینیم که به ما {} خالی رو برگشت میده . 
+
+به این دلیل هست که نیاز داریم from-data رو بیایم parse کنیم تا بتونیم به دیتالی که از طریق from-data می فرستیم دسترسی داشته باشیم . 
+
+همونطور که در عکس زیر مربوط به postman مشاهده می کنیم درون response یک ابجکت {} خالی هست . 
+
+![image](https://github.com/mosenn/back-end/assets/91747908/01c34b45-1f3a-4a4c-81b7-296886ccbbcf)
+
+
+## take form-data with decorator
+
+برای اینکه بتونیم به file دسترسی داشته باشیم نیاز داریم که چندتا مورد استفاده کنیم 
+
+اول نیاز داریم که یک interceptor صدا بزنیم به اسم FileInterceptor برای اینکه بتونیم از FileInterceptor استفاده کنیم 
+
+نیاز داریم از یک UseInterceptors استفاده کنیم .
+
+درون fileInterceptor دقیقا اسمی که درون postman یا فرانت ست کردیم نیاز هست اینجا قرار بدیم که اسم ما در این مثال 'image' هست 
+
+```
+  @UseInterceptors(FileInterceptor('image'))
+```
+در ادامه نیاز داریم برای دسترسی گرفتن به 'image' که درون FileInterceptor هست بیام از decorator @UploadedFile استفاده کنیم . 
+
+که اسم image رو قرار میدیم هر اسمی اینجا می تونیم قرار بدیم در ادامه نوع تایپ شو برابر با Multer.File قرار دادیم .
+
+که از mutler که نصب کردیم گرفته میشه . 
+
+```javascript
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('image'))
+  uploadFile(@Body() body: any, @UploadedFile() image: Express.Multer.File) {
+    console.log(body, image);
+  }
+}
+```
+
+حالا اگر درون postman بیایم به localhost:3000/upload یک درخواست از نوع form-data بزنیم و یک عکس بزاریم و بفرستیم : 
+
+![image](https://github.com/mosenn/back-end/assets/91747908/057d3425-020d-4ab7-b5d6-1cb9c61864d7)
+
+درون ترمینال vscode لاگ زیر رو خواهیم داشت : 
+
+![image](https://github.com/mosenn/back-end/assets/91747908/9c626f1d-4e1a-4c51-9a34-5ae3f3e98792)
+
+
+که هم name که قرار دادیم رو داریم هم اینکه مشخصات اون عکس که قرار دادیم به صورت یک ابجکت داریم . 
+
+در قسمت بعدی میریم سراغ ذخیره سازی عکسی که داریم . 
+
+
+# Summary 
+
+در این بخش multer رو نصب کردیم و یک route ایجاد کردیم از نوع post . 
+
+که امدیم درونش از UseInterceptor و FileInterceptor همینطور UploadedFile@  استفاده کردیم و نوع تایپ رو قرار دادیم Multer.File . 
+
+خروجی که داشتیم یک ابجکت که مشخصات name درونش بود و یک ابجکت که مشخصات عکس درونش قرار داشت . 
+
+در بخش بعدی میریم که file خودمون رو ذخیره کنیم . 
+
+#  End 
+
+`پایان این بخش که با multer اشنا شدیم و یک decorator به اسم UploadedFile و همینطور interceptor FileInterceptor`
 
