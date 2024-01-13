@@ -570,7 +570,7 @@ data.report.push(newReport);
 
 میاد اروری که ایجاد کردیم رو به عنوان `response` نشون میده به همراه `status code 404`
 
-## sumery 
+# Summary 
 
 در این بخش با `Body@` اشنا شدیم که در واقع `body` رو از سمت کلاینت مگیره . 
 
