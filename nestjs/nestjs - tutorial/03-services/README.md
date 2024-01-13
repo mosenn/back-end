@@ -460,7 +460,7 @@ export class AppController {
 }
 
 ```
-# summery 
+# Summary 
 
 در مورد `constracutor` صحبت کردیم . 
 
