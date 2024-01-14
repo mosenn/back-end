@@ -6,8 +6,8 @@ import {
   Param,
   Post,
   Res,
-  UploadedFile,
-  UploadedFiles,
+  // UploadedFile,
+  // UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { AppService } from './app.service';
@@ -64,13 +64,21 @@ export class AppController {
     //     validators: [new MaxFileSizeValidator({ maxSize: 1000 })],
     //   }),
     // )
-    @UploadedFile()
+
     image: Express.Multer.File,
   ) {
     console.log(body, image);
     return { message: 'your file is uploaded' };
   }
 
+  //* this take image new add for part2 upload
+  @Get('/image/:imagename')
+  showImage(@Param('imagename') imgename: string, @Res() res) {
+    const imagePath = join(__dirname, '..', 'uploads', imgename);
+    return res.sendFile(imagePath);
+  }
+
+  //*---------- multi upload image
   @Post('/Multiupload')
   @UseInterceptors(
     FileFieldsInterceptor(
@@ -103,19 +111,12 @@ export class AppController {
     ),
   )
   uploadMultiFiles(
-    @UploadedFiles()
+    // @UploadedFiles()
     files: {
       avatar?: Express.Multer.File[];
       background?: Express.Multer.File[];
     },
   ) {
     console.log(files);
-  }
-
-  //* this take image new add for part2 upload
-  @Get('/image/:imagename')
-  showImage(@Param('imagename') imgename: string, @Res() res) {
-    const imagePath = join(__dirname, '..', 'uploads', imgename);
-    return res.sendFile(imagePath);
   }
 }
