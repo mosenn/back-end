@@ -1,148 +1,419 @@
-# upload file 
+# compelete upload 
 
-در این بخش می خوایم در مورد اپلود کردن file در nestjs صحبت کنیم . 
+در قسمت قبل یک form-data ارسال کردیم و مشخصات شو گرفتیم , در این بخش میخوایم که form-data خودمون رو ذخیره کنیم .
 
-مثل : عکس , pdf و ..
+برای ذخیره سازی میایم از multer استفاده می کنیم . 
 
-## init new nestjs
+**نکته: تمامی اتفاقات درون app.controller.ts اتفاق می افته**
 
+## compelete route upload
 
-یک nestjs جدید ایجاد می کنیم که صرفا فایل ها و فولدر های اولیه رو داشته باشیم . 
-
-
-```
-new nestjs upload 
-```
-
-
-## multer 
-
-در واقع multer یک package هست که می تونیم به وسیله این package فایل ها رو اپلود کنیم . 
-
-از multer درون expressjs استفاده میشه و درون nestjs هم می تونیم ازش استفاده کنیم . 
-
-برای اپلود فایل در سمت فرانت نیاز هست from که در خواست رو می فرسته نیاز هست فرمتش multipart/form-data باشه 
-
-درون postman هم اگر بخوایم فایلی رو ارسال کنیم نیاز هست در قسمت `body` بیام بگیم که from-data هست . 
-
-
-![image](https://github.com/mosenn/back-end/assets/91747908/5644bb3a-28eb-43ac-8bab-7eb0e469c10a)
-
-
-توضیحات خوده داکیومنت nestjs در لینک زیر هست که اپلود فایل رو به وسیله multer توضیح میده : 
-
-```
-https://docs.nestjs.com/techniques/file-upload#array-of-files
-```
-
-در واقغ multer میاد file مد نظر ما رو parse می کنه و می تونیم ازش استفاده کنیم . 
-
-از اونجای که خوده nestjs داره از expressjs استفاده می کنه می تونیم از multer هم استفاده کنیم . 
-
-## send file with postman 
-
-همنطور که اشاره کردیم برای ارسال فایل در postman میایم form-data رو از بخش body انتخاب می کنیم 
-
-
-![image](https://github.com/mosenn/back-end/assets/91747908/5644bb3a-28eb-43ac-8bab-7eb0e469c10a)
-
-
-در ادامه می تونیم که بگیم چه نوع دیتای رو می خوایم بفرستیم یک file یا یک text : 
-
-
-![image](https://github.com/mosenn/back-end/assets/91747908/fa13a185-cede-4441-8e9f-3742cf0c96e1)
-
-
-همونطور که می بینیم یک image تعریف کردیم که در واقع یک file عکس هست در ادامه یک text به اسم name تعریف کردیم که هر دو رو داشته باشیم . 
-
-
-با دستور زیر که درون داکیومنت خوده nestjs هست میام multer رو نصب می کنیم 
-
-```
-$ npm i -D @types/multer
-```
-
-## create route for upload
-
-یک route ایجاد می کنیم از نوع Post@ که قرار برای ما کار اپلود کردن رو انجام بده . 
-
-درون app.controller.ts میایم یک route از نوع Post ایجاد می کنیم . 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/e54cab1a-9222-42fe-a17c-dc9b9b34c7f4)
-
-
-کدی که تعریف می کنیم به صورت زیر هست :
-
+یک route داشتیم که وظیفه اپلود رو به عهده داشت و به صورت زیر هستش
 ```javascript
   @Post('/upload')
-  uploadFile(@Body() body: any) {
-    console.log(body);
-    return body;
+  uploadFile(
+    @Body() body: any,
+    @UploadedFile()
+    image: Express.Multer.File,
+  ) {
+    console.log(body, image);
+    return { message: 'your file is uploaded' };
   }
 ```
 
-خب اگر وارد postman شیم و یک form-data ارسال کنیم می بینیم که به ما {} خالی رو برگشت میده . 
+میایم به این route یک useInterceptor اضافه می کنیم , که از nestjs/comman میاد import میشه 
 
-به این دلیل هست که نیاز داریم from-data رو بیایم parse کنیم تا بتونیم به دیتالی که از طریق from-data می فرستیم دسترسی داشته باشیم . 
-
-همونطور که در عکس زیر مربوط به postman مشاهده می کنیم درون response یک ابجکت {} خالی هست . 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/01c34b45-1f3a-4a4c-81b7-296886ccbbcf)
-
-
-## take form-data with decorator
-
-برای اینکه بتونیم به file دسترسی داشته باشیم نیاز داریم که چندتا مورد استفاده کنیم 
-
-اول نیاز داریم که یک interceptor صدا بزنیم به اسم FileInterceptor برای اینکه بتونیم از FileInterceptor استفاده کنیم 
-
-نیاز داریم از یک UseInterceptors استفاده کنیم .
-
-درون fileInterceptor دقیقا اسمی که درون postman یا فرانت ست کردیم نیاز هست اینجا قرار بدیم که اسم ما در این مثال 'image' هست 
-
+```javascript
+{
+  UseInterceptors,
+} from '@nestjs/common';
+  @UseInterceptors()
 ```
-  @UseInterceptors(FileInterceptor('image'))
+
+درون این UseInterceptors از یک interceptor به اسم FileInterceptor استفاده می کنیم که از @nestjs/platform-express میایم import می کنیم :
+
+وردی اول FileInterceptor اسمی هست که از form-data قرار ارسال شه که اینجا image هست . 
+
+وردی دومی که میگیره یک ابجکت هست که در واقع option های مربوط به multer هست . 
+```javascript
+import {
+  FileInterceptor,
+} from '@nestjs/platform-express';
+FileInterceptor('image')
 ```
-در ادامه نیاز داریم برای دسترسی گرفتن به 'image' که درون FileInterceptor هست بیام از decorator @UploadedFile استفاده کنیم . 
-
-که اسم image رو قرار میدیم هر اسمی اینجا می تونیم قرار بدیم در ادامه نوع تایپ شو برابر با Multer.File قرار دادیم .
-
-که از mutler که نصب کردیم گرفته میشه . 
+به صورت زیر از دو موردی که گفتیم استفاده می کنیم : 
 
 ```javascript
   @Post('/upload')
-  @UseInterceptors(FileInterceptor('image'))
-  uploadFile(@Body() body: any, @UploadedFile() image: Express.Multer.File) {
+  @UseInterceptors(
+    FileInterceptor('image')
+    }),
+  )
+  uploadFile(
+    @Body() body: any,
+    @UploadedFile()
+    image: Express.Multer.File,
+  ) {
     console.log(body, image);
+    return { message: 'your file is uploaded' };
+  }
+```
+
+## FileInterceptor storage
+
+حالا برای اینکه بتونیم از multer استفاده کنیم میایم option های برای multer قرار میدیم . 
+
+این option به صورت یک object درون FileInterceptor قرار میگیره . 
+
+```javascript
+    FileInterceptor('image', {
+      //* storge for save image
+      storage: diskStorage({
+        destination: resolve(__dirname, '../', 'uploads'),
+        filename: (req, file, cb) => {
+          const filename = path.parse(file.originalname).name;
+          const extension = path.parse(file.originalname).ext;
+          return cb(null, `${filename}-${Date.now()}${extension}`);
+        },
+      }),
+```
+
+خوب حالا این option که داریم گفتیم به صورت یک object هست . 
+
+اولین موردی که تعیین کردیم storage هست که در واقع یک key درونی مربوط به option multer هست . 
+
+که برای ذخیره سازی فایل استفاده میشه در ادامه از diskStroage استفاده کردیم که از multer گرفته میشه : 
+
+```
+import { diskStorage } from 'multer';
+```
+
+درون diskStorage یک key به اسم destination داریم که محل ذخیره ساز فایل رو مشخص می کنه : 
+
+```javascript
+   storage: diskStorage({
+        destination: resolve(__dirname, '../', 'uploads'), }
+```
+
+که اینجا از `resolve` خوده nodejs استفاده کردیم و از dirname که بیایم ادرس تعیین کنیم .
+
+این `reslove` از درون nodejs از ماژول path گرفته میشه :
+
+```
+import { resolve } from 'path';
+```
+در واقع ادرسی که مشخص کردیم یک فولدر به اسم uploads درون directory اصلی کد ما ایجاد می کنه . 
+
+که درون این فولدر uploads فایل های عکس ما که قرار هست ذخیره کنیم قرار می گیرند . 
+
+در ادامه فانکشن برای اینکه فایل های که ذخیره می کنیم که اینجا عکس هستند برای اینکه هم نام و هم اسم نباشند . 
+
+نیاز هست چیزی اضافه کنیم که اگر عکس یا فایل هم اسمی upload شد روی هم copy نشن . 
+
+برای اینکه از هم دیگه متفاوت شن می تونیم یک uniq id بیایم ایجاد کنیم و براشون قرار بدیم . 
+
+که در این مثال از new Date استفاده کردیم که بتونیم uniq بودن اسم فایل رو داشته باشیم . 
+
+برای اینکار در ادامه storge از یک فانکشن استفاده می کنیم که یک key به اسم filename داریم : 
+
+```javascript
+      storage: diskStorage({
+        destination: resolve(__dirname, '../', 'uploads'),
+        filename: (req, file, cb) => {
+          const filename = path.parse(file.originalname).name;
+          const extension = path.parse(file.originalname).ext;
+          return cb(null, `${filename}-${Date.now()}${extension}`);
+        },
+      }),
+```
+
+درون فانکشن req رو داریم که به همون requset اشاره می کنه , file رو داریم که به مشخصات خوده file اشاره می کنه . 
+
+در ادامه cb رو داریم که یک call back هست که می تونیم مقدار true / false رو بگیم برگشت بده همچنین یک error ست کنیم براش . 
+
+برای parse کردن نیاز هست از `path` درون nodejs استفاده کنیم : 
+
+```
+import path = require('path');
+```
+
+از درون file از orginalname میایم اسم فایل  و پسوند فایل رو میگیریم . 
+
+که پسوند فایل در واقع `ext` هست . 
+
+
+```javascript
+ const filename = path.parse(file.originalname).name;
+ const extension = path.parse(file.originalname).ext;
+```
+
+برای اینکه ذخیره سازی فایل ما انجام شه `cb` فانکشن رو صدا می زنیم وردی اول که ارور هست رو null می زاریم 
+
+و یک new Date برای متفاوت شدن اسم فایل قرار میدیم در نهایت return می کنیم : 
+
+
+
+```javascript
+ return cb(null, `${filename}-${Date.now()}${extension}`);
+```
+
+یک بار دیگه کد مربوط به storge رو با هم ببینیم که درون FileInterceptor به عنوان option قرار گرفته : 
+
+
+```javascript
+    FileInterceptor('image', {
+      //* storge for save image
+      storage: diskStorage({
+        destination: resolve(__dirname, '../', 'uploads'),
+        filename: (req, file, cb) => {
+          const filename = path.parse(file.originalname).name;
+          const extension = path.parse(file.originalname).ext;
+          return cb(null, `${filename}-${Date.now()}${extension}`);
+        },
+      }),
+```
+
+
+## FileInterceptor fileFilter
+
+برای اینکه بتونیم filter انجام بدیم مشخص کنیم که چه فایلی با چه پسوندی می تونه upload شه 
+
+میایم از fileFilter درون FileInterceptor استفاده می کنیم , fileFilter مثل filename یک فانکشن هست .
+```
+fileFilter: (req, file, cb) => {}
+```
+
+باز نیاز داریم که بیایم `ext` مربوط به file رو بگیریم  و همینطور به وسیله path بیایم parse کنیم . 
+
+درون فانکشن fileFilter کد زیر رو داریم : 
+
+```javascript
+      fileFilter: (req, file, cb) => {
+        const extension = path.parse(file.originalname).ext;
+        if (extension !== '.png') {
+          return cb(new BadRequestException('must be pngs'), false);
+        }
+        return cb(null, true);
+      },
+```
+
+در کد بالا یک `if` تعریف کردیم که گفتیم اگر ext که میشه پسوند فایل اگر که `png.` نبود . 
+
+فانکشن `cb` ما بیاد یک error داشته باشه به اسم BadRequestException و همینطور false رو برگشت بده . 
+
+اما اگر عکس ما پسوند `png.` بود ارور نداشته باشیم null باشه و همینطور true برگشت داده شه . 
+
+در واقع فقط عکس های با پسوند 'png.' اجازه اپلود شدن دارند . 
+
+**نکته حتما باید دات یا همون نقطه رو برای پسوند ها قرار بدیم file.orginalname.ext با دات پسوند فایل رو میگیره**
+
+یک بار کل کد fileInterceptor به همراه stroge و fileFilter نگاه کنیم : 
+
+
+```javascript
+  @UseInterceptors(
+    FileInterceptor('image', {
+      //* storge for save image
+      storage: diskStorage({
+        destination: resolve(__dirname, '../', 'uploads'),
+        filename: (req, file, cb) => {
+          const filename = path.parse(file.originalname).name;
+          const extension = path.parse(file.originalname).ext;
+          return cb(null, `${filename}-${Date.now()}${extension}`);
+        },
+      }),
+      //* fileFilter for (.png , .pdf , .jpeg) and so on ..
+      fileFilter: (req, file, cb) => {
+        const extension = path.parse(file.originalname).ext;
+
+        if (extension !== '.png') {
+          return cb(new BadRequestException('must be pngs'), false);
+        }
+        return cb(null, true);
+      },
+    }),
+  )
+```
+
+
+## FileInterceptor limit
+
+در ادامه می تونیم تعیین کنیم حجم فایل اپلود شده چه مقدار باشه . 
+
+برای اینکه حجم فایل رو مشخص کنیم و محدود کنیم کافیه از limits استفاده کنیم . 
+
+که limit هم درون FileInterceptor استفاده میشه : 
+
+```
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: { fileSize: 2000000 },
+    }),
+  )
+```
+
+**نکته : در کد  limits اخر قرار گرفته در واقع بعد از storge و fileFilter برای شلوغ نشدن صرفا اینجا limits رو قرار دادیم**
+
+
+# Get Image
+
+برای دیدن عکس های که ذخیره کردیم یک route از نوع Get ایجاد می کنیم . 
+
+که این route به وسیله Param به اسم عکس ذخیره شده دسترسی میگیریم و می تونیم اونو ببنیم . 
+
+```javascript
+  @Get('/image/:imagename')
+  showImage(@Param('imagename') imgename: string, @Res() res) {
+    const imagePath = join(__dirname, '..', 'uploads', imgename);
+    return res.sendFile(imagePath);
+  }
+```
+یک ادرس ست کردیم به اسم `image/` که یک param داره به اسم `imagename:/` .
+
+در ادامه  یک showImage داریم درونش از decorator @Param استفاده کردیم param که `imagename` هست رو گرفتیم نوعش رو string قرار دادیم . 
+
+در ادامه برای ارسال عکس از decorator Res استفاده کردیم . 
+
+درون route یک const داریم به اسم imagePath ;که از `join` استفاده می کنیم برای گرفتن ادرس عکس که در فولدر uploads قرار دارند . 
+
+در واقع join از دورن nodejs گرفته میشه . 
+
+```
+import { join } from 'path';
+```
+
+هیمنطور param رو پاس میدیم که اسم عکسی هست که می خوایم در response ببینیم . 
+
+در نهایت return رو داریم که یک sendFile هست که عکس گرفته شده به وسیله params رو ارسال می کنه . 
+
+به صورت زیر درون postman در خواست می زنیم : 
+
+
+![image](https://github.com/mosenn/back-end/assets/91747908/199f46fa-7298-4e66-a03b-d901823bfa0f)
+
+
+# multie upload image 
+
+در واقع مثل upload file تکی هست و stroge , fileFilter , limits همون کدی هست که برای اپلود تکی استفاده کردیم . 
+
+اما تفاوتش یکی اش این هست که از به جای FileInterceptor از FileFieldsInterceptor استفاده می کنیم .
+
+که از همون @nestjs/platform-express  میاد import میشه . 
+
+```
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
+```
+
+مورد بعدی به جای اینکه صرفا یک وردی و یک اسم بگیره یک ارایه [] میگیره . 
+
+می تونیم فیلد های مختلفی از فایل رو تعریف کنیم : 
+
+```javascript
+  FileFieldsInterceptor(
+      [
+        { name: 'avatar', maxCount: 1 },
+        { name: 'background', maxCount: 1 },
+      ],
+```
+
+**نکته اسم که قرار گرفته در واقع اسم form-data هست که از سمت فرانت یا درون postman قرار میگیره نیاز هست به همین اسامی باشه**
+
+مقدار maxCount یعنی به تعداد 1 می تونیم background یا avatar اضافه کنیم . 
+
+
+## fileFilter multi upload
+
+تمامی کد های fileFilter و stroge و limits مثل قبل هست . 
+
+ولی تفاوتی که اینجا داره درون `if` مربوط به fileFilter که امدیم علاوه بر 'png.'
+
+یک فرمت عکس دیگه 'jpeg.' رو هم اجازه اپلود بهش دادیم : 
+
+```javascript
+       if (extension === '.png' || extension === '.jpeg') {
+            return cb(null, true);
+          }
+       return cb(new BadRequestException('must be png or jpeg'), false);
+```
+
+## route for multi upload 
+
+یک route دارییم از نوع post برای اپلود multi file . 
+```javascript
+  @Post('/Multiupload')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'avatar', maxCount: 1 },
+        { name: 'background', maxCount: 1 },
+      ],
+      {
+         // multer options
+      },
+    ),
+  )
+  uploadMultiFiles(
+    files: {
+      avatar?: Express.Multer.File[];
+      background?: Express.Multer.File[];
+    },
+  ) {
+    console.log(files);
   }
 }
 ```
 
-حالا اگر درون postman بیایم به localhost:3000/upload یک درخواست از نوع form-data بزنیم و یک عکس بزاریم و بفرستیم : 
+**نکته : در کد بالا موارد storge, fileFilter , limits به دلیل تکراری بودن و تغییر اندک جذف شدن درون فایل کد می تونید مشاهده کنید**
 
-![image](https://github.com/mosenn/back-end/assets/91747908/057d3425-020d-4ab7-b5d6-1cb9c61864d7)
+در ادامه متد uploadMultiFiles رو داریم که درونش یک object به اسم files داریم : 
+```javascript
+  uploadMultiFiles(
+    files: {
+      avatar?: Express.Multer.File[];
+      background?: Express.Multer.File[];
+    },
+```
 
-درون ترمینال vscode لاگ زیر رو خواهیم داشت : 
+که گفتیم avatar , background در واقع اسم form-data هستند که از سمت فرانت یا درون postman قرار می گیرند . 
 
-![image](https://github.com/mosenn/back-end/assets/91747908/9c626f1d-4e1a-4c51-9a34-5ae3f3e98792)
+در نهایت یک log ساده از چیزی که ارسال شده و upload میشه خواهیم داشت . 
 
+```javascript
+  uploadMultiFiles(
+    // @UploadedFiles()
+    files: {
+      avatar?: Express.Multer.File[];
+      background?: Express.Multer.File[];
+    },
+  ) {
+    console.log(files);
+  }
+```
 
-که هم name که قرار دادیم رو داریم هم اینکه مشخصات اون عکس که قرار دادیم به صورت یک ابجکت داریم . 
-
-در قسمت بعدی میریم سراغ ذخیره سازی عکسی که داریم . 
-
+**نکته: برای گرفتن عکس ها به طور تکی می تونیم از متد Get که داشتیم استفاده کنیم . گرفتن تمامی عکس ها در این فایل کار نشده**
 
 # Summary 
 
-در این بخش multer رو نصب کردیم و یک route ایجاد کردیم از نوع post . 
+در این بخش upload مربوط به عکس رو کامل کردیم به وسیله multer . 
 
-که امدیم درونش از UseInterceptor و FileInterceptor همینطور UploadedFile@  استفاده کردیم و نوع تایپ رو قرار دادیم Multer.File . 
+که storge رو برای ذخیره سازی در اختیار ما قرار میداد . 
 
-خروجی که داشتیم یک ابجکت که مشخصات name درونش بود و یک ابجکت که مشخصات عکس درونش قرار داشت . 
+برای filter کردن پسوند اپلود fileFilter رو برای ما قرار میداد . 
 
-در بخش بعدی میریم که file خودمون رو ذخیره کنیم . 
+برای اینکه بتونیم حجم فایل اپلودی رو محدود کنیم limits رو در اختیار ما قرار میداد . 
 
-#  End 
+یک route get نوشتیم که به وسیله params می تونستیم به عکس های که اپلود کردیم به طور تکی بتونیم ارسال کنیم 
 
-`پایان این بخش که با multer اشنا شدیم و یک decorator به اسم UploadedFile و همینطور interceptor FileInterceptor`
+به وسیله sendFile و درون postman مشاهده کنیم . 
 
+اپلود رو به صورت multi داشتیم که 2 تا عکس رو با 2 پسوند متفاوت به طور همزمان اپلود کردیم . 
+
+برای اینکار از FileFieldsInterceptor استفاده کردیم که یک ارایه [] می گرفت و درون این ارایه object قرار دادیم . 
+
+
+# END 
+
+`پایان بخش اپلود پارت دوم که عکس اپلود کردیم در پوشه uploads و درون postman به وسیله متد get نمایش دادیم`
