@@ -19,9 +19,6 @@ async function bootstrap() {
     .setDescription('The blog API description')
     .setVersion('1.0')
     .addTag('blog')
-    .addServer(
-      'https://app.swaggerhub.com/apis-docs/RIZEMIZEEEE/blgo-test-nestjs/1.0.0',
-    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
