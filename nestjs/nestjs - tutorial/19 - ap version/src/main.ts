@@ -4,9 +4,21 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  //* with header
   app.enableVersioning({
-    type: VersioningType.URI,
+    type: VersioningType.HEADER,
+    header: 'version',
   });
+  // * with URI
+  // app.enableVersioning({
+  //   type: VersioningType.URI,
+  // });
+
+    // * with media type
+  // app.enableVersioning({
+  //   type: VersioningType.MEDIA_TYPE,
+  //   key:'v'
+  // });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
