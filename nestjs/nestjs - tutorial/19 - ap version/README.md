@@ -1,303 +1,135 @@
-# open api swagger
+# api version 
 
-در این بخش می خوایم swagger به پروژه اضافه کنیم . 
+در این بخش می خوایم api های رو که داریم ورژن بندی انجام بدیم . 
 
-در اصل swagger امکان به ما میده که بتونیم برای api های که ایجاد کردیم یک داکیومنت بنویسیم . 
+به این دلیل که ممکنه به هر دلیل هر api اپدیت شه یا اصلا یک api جدید به پروژه اضافه شه . 
 
-درون داکیومنت خوده nestjs توضیح داده که چطوری بیایم اینکارو انجام بدیم 
+زمانی که Api های ما دارند کار می کنند روی یک بزینس حالا چه موبایل app چه وبسایت . 
+
+نباید api های که قبلا کار می کردن رو پاک کنیم یا ادیت کنیم چون ممکنه پروژه از کار بیوفته . 
+
+نیاز هست ورژن بندی انجام بدیم برای api ها در نهایت فرانت بیاد ورژن جدید از api رو بگیره و درون پروژه استفاده کنه . 
+
+در ادامه website یا application اپدیت میشه و افرادی که دارن از اون برنامه استفاده می کنند .
+
+برنامه رو اپدیت می کنند و به ورژن جدید برنامه دسترسی دارند و کسانی که اپدیت نکردن هم به ورژن قبلی دسترسی دارند . 
+
+## nestjs doc versioning
+
+برای ورژن بندی خوده nestjs درون داکیومنت در قسمت techniques در بخش versioning توضیح داده . 
 
 ```
-https://docs.nestjs.com/openapi/introduction
+https://docs.nestjs.com/techniques/versioning
 ```
 
-## install swagger
-
-به وسیله دستور زیر میایم swagger رو نصب می کنیم : 
+که ما در این بخش بهش می پردازیم .
 
 
-```
-npm install --save @nestjs/swagger
-```
+# VersioningTypes
 
-## add swagger in main.ts 
+ورژن بندی درون nestjs چند روش داره که درون document nestjs توضیح داده شده .
 
-درون main.ts نیاز داریم که بیایم از swagger استفاده کنیم . 
+به عکس زیر که از داکیومنت nestjs هست توجه کنید : 
 
-![image](https://github.com/mosenn/back-end/assets/91747908/17a10b90-c9d6-4d96-9366-a3199bfc2737)
+![image](https://github.com/mosenn/back-end/assets/91747908/295baae0-8528-45c0-a1b6-665ac064ab71)
 
-نیاز داریم که ماژول های زیر رو import کنیم از swagger : 
+
+همونطور که در تصویر بالا مشخص هست چند روش برای تعیین version در nestjs داریم . 
+
+
+URI Versioning
+Header Versioning
+Media Type Versioning
+Custom Versioning
+
+که مورد استفاده ترین این موارد URI Versioning , Header Versioning هست . 
+
+## enableVersioning
+
+برای اینکه بتونیم version بندی رو برای api داشته باشیم خوده nestjs قابلیت های درونی اضافه کرده . 
+
+که این قابلیت enableVersioning هست که درون main.ts اضافه میشه . 
+
+![image](https://github.com/mosenn/back-end/assets/91747908/69fbf3b6-41e2-46cb-b088-1cd3746d4125)
+
+درون main.ts میایم از enableVersioning استفاده می کنیم که بتونیم ورژن بندی رو انجام بدیم : 
 
 ```javascript
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+  app.enableVersioning();
 ```
 
-در ادامه یک const config تعریف می کنیم که درونش از DocumentBuilder استفاده کنیم برای ایجاد config مربوط به swagger . 
+## URI Versioning 
+
+برای اینکه بخوایم از  URI Versioning استفاده کنیم نیاز هست که درون   app.enableVersioning به صورت زیر اضافه اش کنیم . 
+
+که درون main.ts این اتفاق می افته . 
+
+```
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+```
+
+## setup Version on Method 
+
+در ادامه به app.controller.ts میریم . 
+
+![image](https://github.com/mosenn/back-end/assets/91747908/4b9ce9a9-ec1e-4bc3-8a6e-6b5039b136bc)
+
+
+برای اینکه ورژن بندی رو داشته باشیم 2 تا route تعریف می کنیم که ادرس ها شون یکی باشند . 
 
 ```javascript
-  const config = new DocumentBuilder()
-    .setTitle('webblog api')
-    .setDescription('The blog API description')
-    .setVersion('1.0')
-    .addTag('blog')
-    .build();
-```
-
-در کد بالا به وسیله setTitle میایم title مد نظر خودمون رو قرار میدیم . 
-
-به وسیله setDescription  می تونیم یک description بنویسیم .
-
-در ادامه setVersion رو داریم که به ورژن اشاره می کنه می تونیم تغییر بدیم . 
-
-همینطور addTag رو داریم که یک tag می تونیم قرار بدیم . 
-
-در نهایت به وسیله build. میاد این config رو ایجاد می کنه . 
-
-یک const به اسم document داریم که از SwaggerModule.createDocument استفاده می کنه برای ایجاد یک document .
-
-که app و config که ایجاد کردیم رو درون خودش قرار میده : 
-
-```javascript
-  const document = SwaggerModule.createDocument(app, config);
-```
-
-**نکته : منظور از app درون main.ts همون core اصلی پروژه هست که توسط NestFactory.create ایجاد شده , به کد زیر دقت کنید :**
-
-```javascript
-  const app = await NestFactory.create(AppModule);
-```
-
-در اخر به وسیله متد setup که درون SwaggerModule هست میایم میگیم در کجا این document که برای api نوشتیم در چه ادرسی اجرا شه 
-
-در اصل اگر سرور رو ران کنیم و به ادرس `localhost:3000/api` بریم وارد swagger میشیم که برای این سرور ایجاد کردیم .
-
-همینطور const document که یک Document ایجاد می کنه رو درونش قرار دادیم در ادامه خوده app رو هم قرار دادیم . 
-
-```javascript
-  SwaggerModule.setup('api', app, document);
-```
-ادرس که می تونیم به swagger دسترسی داشته باشیم که بالا هم اشاره شده بهش : 
-
-```
-localhost:3000/api
-```
-خب تا به اینجا ما swagger رو نصب کردیم و مواردی که باید درون main.ts اضافه میشد رو اضافه کردیم . 
-
-مرحله بعدی استفاده از decorator های هست که خوده nestjs تعیین کرده برای swagger که درون داکیومنت هم اشاره کرده : 
-
-```
-https://docs.nestjs.com/openapi/decorators
-```
-
-اگر لینک بالا رو کپی کنید وارد صحفه داکیومنت خوده nestjs شید می بینید decorator های که لیست کرده برای استفاده . 
-
-**نکته : بعضی از decorator ها فقط برای route یا همون Method هستند بعضی ها برای controller / Method و بعضی صرفا برای module**
-
-
-# swagger decorator 
-
-
-در این فایل یک پروژه کوچیک داریم که صرفا یک سری متد تعریف کردیم . 
-
-که بتونیم یک swagger ایجاد کنیم و از برخی از decorator ها استفاده کنیم . 
-
-تصویر فایل پروژه رو در عکس زیر مشاهده می کنید و به طور کلی درون app.controller.ts و فولدر dto کار داریم . 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/0af74bf3-2565-4f29-bfb4-33c01ee6007f)
-
-درون app.controller.ts و درون decorator @Controller امدیم به طور پیش فرض 'user' رو قرار دادیم  .
-
-```
 @Controller('user')
-```
-
-ادرس تمامی api مد نظر ما localhost:3000/user هست . 
-
-## @ApiResponse
-
-```javascript
-import { ApiResponse } from '@nestjs/swagger';
-
-```
-
-به وسیله decorator ApiResponse می تونیم status کد و یک description برای api خودمون داشته باشیم . 
-
-که برای register که از نوع Post هست تعریف کردیم . 
-
-**نکته : به طور پیش فرض متد post همیشه status code 201 رو داره ولی اینجا برای اینکه نحوه کار کرد  ApiResponse رو ببینیم به 202 تغییرش دادیم**
-
-```javascript
-  @ApiResponse({ status: 202, description: 'create user' })
-  // @ApiBody({type:Userdto})
-  @Post('register')
-  register(@Body() body: Userdto) {
-    return { message: 'user is register', data: body };
-  }
-```
-## ApiOkResponse
-
-
-```javascript
-import { ApiOkResponse} from '@nestjs/swagger';
-```
-
-به وسیله decorator ApiOkResponse می تونیم صرفا یک description تعریف کنیم و البته status کدش همیشه 201 هست :
-
-```javascript
-  @ApiOkResponse({description: 'login user' })
-  @Post('login')
-  login(@Body() body: Userdto) {
-    console.log(body);
-    return { message: 'user is login', data: body };
-  }
-```
-
-## ApiBearerAuth
-
-```javascript
-import { ApiBearerAuth} from '@nestjs/swagger';
-```
-
-می تونیم برای api های که Bearer token می خوان نیاز به دسترسی دارند از decorator ApiBearerAuth استفاده کنیم : 
-
-```javascript
-  @ApiBearerAuth()
-  @Get('users')
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+  @Get('/users')
   users() {
-    return 'all users';
+     return 'version-1';
   }
-```
-
-## in dto 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/eec2809b-770c-40cb-9693-b8b0b29032ca)
-
-درون فایل dto می تونیم بیایم یک سری decorator اضافه کنیم که با اضافه کردن این decorator ها 
-
-در قمست api document به ما schema , json رو نشون میدن : 
-
-```javascript
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
-
-export class Userdto {
-  @IsString()
-  @ApiProperty({ type: String, description: 'username' })
-  username: string;
-  @IsString()
-  @IsEmail()
-  @ApiProperty({ type: String, description: 'email' })
-  email: string;
+  @Get('/users')
+  usersv2() {
+       return 'version-2';
+  }
 }
 ```
+زمانی که 2 route با یک ادرس داشته باشیم صرفا یکی از اونها برای ما قابل اجرا هستند . 
 
-که در کد بالا از ApiProperty استفاده کردیم برای username و email حتی یک description هم قرار دادیم براشون و نوع تایپ String رو گذاشتیم . 
+اگر swagger رو چک کنیم در این حالت فقط Get که `version-1` هست قابل مشاهده هست . 
 
-**نکته : این  String در واقع ماله خوده javascript هست با تایپ string که مربوط به typescript هست تفاوت داره**
-
-**نکته : برای استفاده از dto نیاز هست class-validator , class-transformer استفاده شه که در این پروژه نصب شده و استفاده شده**
-
-**حتما نیاز هست new PipeValidation درون main.ts استفاده شه همینطور از transformer**
-
-```
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
-```
+![image](https://github.com/mosenn/back-end/assets/91747908/cb73444c-a45c-4883-9fbc-044ff4efa01f)
 
 
-# Output swagger 
+برای اینکه بتونیم برای این 2 route که تعریف کردیم version بندی رو داشته باشیم میایم از decorator Version استفاده می کنیم . 
 
-بریم ببینم چه خروچی داریم برای swagger که برای این پروژه ساختیم . 
-
-پروژه رو ران می کنیم : 
+اول import می کنیم از nestjs/comman : 
 
 ```
-npm run start:dev 
+import { Version } from '@nestjs/common';
 ```
 
-در ادامه وارد ادرس localhost:3000/api میشیم . 
+به صورت زیر درون کد از `Version` استفاده می کنیم : 
 
-تصویر زیر رو خواهیم داشت و داکیومنتی که ایجاد کردیم رو می تونیم مشاهده کنیم : 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/bcfd48e3-2ea9-4d06-9099-4e2e30a0ca0a)
-
-در عکس زیر اگر دقت کنید یک قفل مشاهده می کنید که این فقل برای استفاده از ApiBearerAuth نمایش داده شده . 
-
-هر جا از این decorator ApiBearerAuth استفاده کنیم این قفل نمایش داده میشه . 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/d7a04e11-8e76-47b0-8a23-420d0192b88f)
-
-![image](https://github.com/mosenn/back-end/assets/91747908/d9f6b559-0e7c-482b-af66-22fcd3901265)
-
-## dto schema 
-
-اگر یادتون باشه در قسمت dto از decorator ApiProperty استفاده کردیم 
-
-خروچی که این decorator به ما میده به صورت زیر هست : 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/2211f783-05fa-41af-b00c-24daa3ee60b2)
-
-در قسمت Example Value می بینیم که username , email رو داریم 
-
-که نوع تایپ رو string قرار داده و متوجه body ارسالی میشیم . 
-
-اگر روی Schema کلیک کنیم حتی می تونیم ببینیم که کدوم فیلد اجبار هست یا نیست : 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/75104c18-6a71-448c-af52-0d41825a3044)
-
-کمی پایین تر status code رو داریم که گفتیم برای بهتر متوجه شدن کار کرد  decorator ApiResponse 
-
-امدیم status code روی 202 گذاشتیم . 
-
-![image](https://github.com/mosenn/back-end/assets/91747908/c270fe03-3855-47c7-8780-d3390c3f4c99)
-
-# ApiBody 
-
-در اخر یک decorator ApiBody  داریم که روی method تنظیم میشه . 
-
-اگر قرارش بدیم می تونیم درون body بگیم چه چیزی باشه مشابه ApiProperty .
-
-به عنوان مثال در کد زیر امدیم گفتیم که string خالی باشه . 
-
-```javascript
-  @ApiResponse({ status: 202, description: 'create user' })
-  @ApiBody({type:""})
-  @Post('register')
-  register(@Body() body: Userdto) {
-    return { message: 'user is register', data: body };
+```
+  @Version('1')
+  @Get('/users')
+  users() {
+    return 'version-1';
+  }
+  @Version('2')
+  @Get('/users')
+  usersv2() {
+    return 'version-2';
   }
 ```
-اگر کد رو ذخیره کنیم و صفحه swagger رو refresh کنیم می بینیم که صرفا string رو در قسمت Example value قرار داده . 
 
-![image](https://github.com/mosenn/back-end/assets/91747908/a49dfc9e-aff6-4f39-be81-2ffe7c723083)
+اگر کد رو save کنیم و درون localhost:3000/api بریم و صحفه رو رفرش کنیم . 
 
-# Summary 
+می بینیم که هر دو route رو داریم منتها ابتدای هر دو api یک v1 , v2 اضافه شده . 
 
-در بخش امدیم به وسیله swagger یک document برای Api های که نوشتیم ایجاد کردیم . 
+که در واقع این اضافه شدن v2 , v1 کار همین decorator @Version هست . 
 
-که با برخی از decorator nestjs که برای swagger تعریف شدن اشنا شدیم . 
-
-که با هم دیگه نحوه استفاده شون متفاوت بود برخی برای method / controller بودن 
-
-برخی شون برای method تنها قابلیت استفاده شدن داشتند و برخی شون هم صرفا برای module بودن . 
-
-در لینک زیر می تونید به استفاده swagger در nestjs رو ببنید و بیشتر مطالعه کنید . 
-
-```
-https://docs.nestjs.com/openapi/introduction
-```
-
-```
-https://docs.nestjs.com/openapi/decorators
-```
-
-# END 
+![image](https://github.com/mosenn/back-end/assets/91747908/5d642489-a7b8-4ffa-b4c9-ce6a7f8a423a)
 
 
-`پایان این بخش که مربوط به استفاده و اتصال swagger در nestjs بود `
+## setup Version on Controller 
