@@ -344,7 +344,11 @@ export class AppController {
 ```
 
 درون app-two.controller.ts کد زیر رو داریم : 
+
+
 ![image](https://github.com/mosenn/back-end/assets/91747908/85ac0470-c249-4761-a0fb-8db16d7634f2)
+
+
 
 ```
 @Controller('user')
