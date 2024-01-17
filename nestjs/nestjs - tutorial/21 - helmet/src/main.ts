@@ -2,12 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
- //* cors policy
-  app.enableCors({origin:['address-1' , 'https://www.test-cors.org']});
-
+  //* cors policy
+  app.enableCors({ origin: ['address-1', 'https://www.test-cors.org'] });
+  //* helmet
+  app.use(helmet());
+  //* pipe
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -17,7 +20,7 @@ async function bootstrap() {
       },
     }),
   );
-
+  //* swagger
   const config = new DocumentBuilder()
     .setTitle('webblog api')
     .setDescription('The blog API description')
