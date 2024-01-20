@@ -4,7 +4,6 @@ import { AppService  } from './app.service';
 
 @Module({
   imports: [],
-  //* for controller add AppTwoController to module
   controllers: [AppController ],
   providers: [AppService],
 })

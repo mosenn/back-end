@@ -1,0 +1,25 @@
+*{
+
+    box-sizing: border-box;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+figure > figcaption {
+    font-size: 25px;
+}
+body { 
+    background: rgb(47, 47, 47);
+    color: #fffaff;
+
+}
+
+.title {
+    color:skyblue;
+    border:1px solid chocolate;
+    width: fit-content;
+    padding: 15px;
+    border-radius: 5px;
+}

@@ -1,21 +1,16 @@
-import { Controller, Get, } from '@nestjs/common';
+import { Controller, Get, Render, } from '@nestjs/common';
 import { AppService } from './app.service';
 
-//*-------- for controller
-// @Controller({path:'user' , version:'1'})
 
 @Controller('user')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/users')
+  @Get('')
+  @Render('users/index')
   users() {
-    return 'all user here';
+    return {name:"mohsen" , work:'developer'}
   }
 
-  @Get('/profile')
-  user() {
-    return 'user profile';
-  }
 
 }
